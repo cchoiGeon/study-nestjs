@@ -1,26 +1,32 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { BoardStatus } from './board.board-status';
 import { CreateBoardDto } from './dto/create-board-dto';
 import { BoardStatusValidationPipe } from './pipe/board-status-validation';
 import { Board } from './board.entitiy';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('/board')
+@UseGuards(AuthGuard())
 export class BoardController {
     constructor(
         private boardService:BoardService,
     ){}
 
     @Get('/')
-    getAllBoard(): Promise<Board[]> {
-        return this.boardService.getAllBoards();
+    getAllBoard(
+        @GetUser() user: User
+    ): Promise<Board[]> {
+        return this.boardService.getAllBoards(user);
     }
-
     @Post('/')
     createBoard(
-        @Body() createBoardDto:CreateBoardDto
+        @Body() createBoardDto:CreateBoardDto,
+        @GetUser() user: User,
     ): Promise<void> {
-        return this.boardService.createBoard(createBoardDto);
+        return this.boardService.createBoard(createBoardDto,user);
     }
 
     @Get('/:id')
@@ -32,9 +38,10 @@ export class BoardController {
 
     @Delete('/:id')
     deleteBoard(
-        @Param('id') id:number
+        @Param('id') id:number,
+        @GetUser() user:User
     ): Promise<void> {
-        return this.boardService.deleteBoard(id);
+        return this.boardService.deleteBoard(id,user);
     }
 
     @Patch('/:id')

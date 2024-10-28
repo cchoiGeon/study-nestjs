@@ -1,0 +1,14 @@
+server: 
+  port: 3000
+
+db: 
+  type: 'postgres'
+  host: 'localhost'
+  port: 5432
+  database: 'test'
+  username: 'choegeon'
+  password: '11111111'
+
+jwt: 
+  secret: 'test'
+  expiresIn: 3600
