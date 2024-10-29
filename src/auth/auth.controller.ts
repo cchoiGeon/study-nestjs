@@ -1,9 +1,10 @@
-import { Body, Controller, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 import { GetUser } from './get-user.decorator';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,8 +16,14 @@ export class AuthController {
     }
     
     @Post('/signin')
-    signIn(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}>  {
-        return this.authService.signIn(authCredentialsDto);
+    
+    async signIn(
+        @Res() res: Response,
+        @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto
+        ) {
+        const { accessToken } = await this.authService.signIn(authCredentialsDto);
+        res.cookie('accessToken', accessToken, { httpOnly: true });
+        return res.send('Cookie has been set');
     }
 
     @Post('/test')
