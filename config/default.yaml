@@ -12,3 +12,7 @@ db:
 jwt: 
   secret: 'test'
   expiresIn: 3600
+
+google:
+  CLIENT_ID: '1069947150682-hs919141bukqqa857bgm9utlq3v0uf8k.apps.googleusercontent.com'
+  CLIENT_SECRET: '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'

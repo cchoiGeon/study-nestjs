@@ -9,7 +9,7 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
 @Controller('/board')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('google'))
 export class BoardController {
     constructor(
         private boardService:BoardService,
